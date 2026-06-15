@@ -1,8 +1,9 @@
-name: Codex Release Notes
+name: Release Notes
 
-# On a version tag (v*), Codex drafts user-facing release notes from the commit
-# history since the previous tag and publishes a GitHub Release.
-# Requires the OPENAI_API_KEY repository secret.
+# On a version tag (v*), publish a GitHub Release. When the OPENAI_API_KEY secret
+# is set, Codex drafts polished user-facing notes; otherwise the release still
+# ships with GitHub's built-in auto-generated notes (deterministic fallback, no
+# API key required). The Codex layer is an upgrade, not a hard dependency.
 
 on:
   push:
@@ -22,6 +23,8 @@ jobs:
 
       - name: Draft release notes with Codex
         id: codex
+        if: ${{ secrets.OPENAI_API_KEY != '' }}
+        continue-on-error: true   # fall back to auto-notes if Codex fails
         uses: openai/codex-action@v1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
@@ -40,6 +43,14 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${{ github.ref_name }}" \
-            --title "${{ github.ref_name }}" \
-            --notes-file RELEASE_NOTES.md
+          if [ -s RELEASE_NOTES.md ]; then
+            echo "Publishing with Codex-drafted notes."
+            gh release create "${{ github.ref_name }}" \
+              --title "${{ github.ref_name }}" \
+              --notes-file RELEASE_NOTES.md
+          else
+            echo "No Codex notes (secret unset or step skipped) — using GitHub auto-generated notes."
+            gh release create "${{ github.ref_name }}" \
+              --title "${{ github.ref_name }}" \
+              --generate-notes
+          fi
