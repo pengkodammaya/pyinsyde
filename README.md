@@ -1,5 +1,9 @@
 # pyinsyde — a Python port of the INSYDE flood-damage model
 
+[![CI](https://github.com/pengkodammaya/pyinsyde/actions/workflows/ci.yml/badge.svg)](https://github.com/pengkodammaya/pyinsyde/actions/workflows/ci.yml)
+[![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.10%E2%80%933.13-blue.svg)](pyproject.toml)
+
 `pyinsyde` is a faithful, dependency-light Python port of **INSYDE**, the
 synthetic (component-based) flood depth-damage model for residential buildings of
 Dottori et al. (2016, *NHESS* 16, 2577–2591). It reproduces the original R model
