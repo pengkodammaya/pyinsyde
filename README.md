@@ -67,9 +67,30 @@ A complete runnable script — the Python equivalent of the R example — is in
 uv run python examples/run_insyde.py
 ```
 
-To use your own region's unit prices, pass a path to `load_unit_prices(path=...)`
-(same `name  value  #unit` format as `pyinsyde/data/unit_prices.txt`) and supply
-your own replacement value to `compute_damage`.
+---
+
+## Regional localization (bring your own prices)
+
+INSYDE's damage logic is region-agnostic; only the **cost inputs** are local. The
+model ships with its original Italian (EUR) reference data, but you can run it for
+any country without modifying the package:
+
+```python
+from pyinsyde import compute_damage, load_unit_prices, ExposureVariables, HazardVariables
+
+up = load_unit_prices(path="prices/my_region.txt")   # your unit-price table
+rv = 2000.0                                           # your replacement value (per m²)
+res = compute_damage(ExposureVariables(), HazardVariables(), up, rv, uncert=0)
+```
+
+Your price table uses the same `name  value  #unit` format as
+[`pyinsyde/data/unit_prices.txt`](pyinsyde/data/unit_prices.txt). Supply your
+region's replacement value directly to `compute_damage`.
+
+> **Only commit openly-licensed data.** Keep commercial cost tables out of the
+> repository and load them at runtime via `path=`. Contributions of
+> **open** regional datasets are very welcome — see the roadmap
+> ([multi-region support](https://github.com/pengkodammaya/pyinsyde/issues/3)).
 
 ---
 
