@@ -1,5 +1,6 @@
 # pyinsyde — a Python port of the INSYDE flood-damage model
 
+[![PyPI](https://img.shields.io/pypi/v/pyinsyde.svg)](https://pypi.org/project/pyinsyde/)
 [![CI](https://github.com/pengkodammaya/pyinsyde/actions/workflows/ci.yml/badge.svg)](https://github.com/pengkodammaya/pyinsyde/actions/workflows/ci.yml)
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.10%E2%80%933.13-blue.svg)](pyproject.toml)
@@ -31,6 +32,12 @@ can be produced as an expected value or as a Monte-Carlo distribution.
 ---
 
 ## Install
+
+```bash
+pip install pyinsyde
+```
+
+From source (e.g. for development):
 
 ```bash
 pip install -e .            # or: uv pip install -e .
