@@ -1,0 +1,36 @@
+name: Publish to PyPI
+
+# On a version tag (v*), build the package and publish it to PyPI via PyPI
+# "trusted publishing" (OIDC) — no API token is stored in the repo. Requires a
+# trusted publisher registered on PyPI for this repo (see below).
+#
+# PyPI setup (one-time): pypi.org → project "pyinsyde" → Manage → Publishing →
+# "Add a new pending/trusted publisher":
+#   Owner: pengkodammaya · Repository: pyinsyde
+#   Workflow name: publish.yml · Environment name: pypi
+#
+# Release flow: bump `version` in pyproject.toml (PyPI versions are immutable),
+# then `git tag vX.Y.Z && git push origin vX.Y.Z`. This builds and uploads; the
+# separate codex-release.yml drafts the GitHub Release notes for the same tag.
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write   # required for trusted publishing (OIDC)
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+      - name: Build sdist + wheel
+        run: uv build
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/
