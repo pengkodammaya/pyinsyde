@@ -51,6 +51,11 @@ def compute_damage(
 ) -> DamageResult:
     e, hz, up = exposure, hazard, unit_prices
 
+    # IA, BA and he carry None as a documented sentinel and are filled by the
+    # dataclass __post_init__, so they are concrete here. Assert it for the type
+    # checker (and as a guard against a hand-constructed instance that skipped it).
+    assert e.IA is not None and e.BA is not None and hz.he is not None
+
     # Unpack for readability (matches R variable names)
     FA, IA, BA, EP, IH, BH, GL, NF = e.FA, e.IA, e.BA, e.EP, e.IH, e.BH, e.GL, e.NF
     BT, BS, PD, PT, FL, YY, LM = e.BT, e.BS, e.PD, e.PT, e.FL, e.YY, e.LM

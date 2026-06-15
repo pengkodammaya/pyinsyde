@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 import numpy as np
+import numpy.typing as npt
 
 
 @dataclass
@@ -18,6 +19,7 @@ class ExposureVariables:
 
     # Geometry
     FA: float = 100.0          # Footprint area (m2)
+    # None is the documented sentinel: IA/BA are derived from FA in __post_init__.
     IA: Optional[float] = None  # Internal area (m2); default 0.9 * FA
     BA: Optional[float] = None  # Basement area (m2); default 0.5 * FA
     EP: float = 40.0           # External perimeter (m)
@@ -50,7 +52,9 @@ class HazardVariables:
     model exactly one hazard variable may be passed as a vector.
     """
 
-    he: np.ndarray = None  # Water depth at ground level (m)
+    # Scalar or 1-D array of depths (or None for the default grid); normalized to
+    # an ndarray in __post_init__.
+    he: Optional[npt.ArrayLike] = None  # Water depth at ground level (m)
     v: float = 0.5         # Flow velocity (m/s)
     s: float = 0.05        # Sediment concentration (-)
     d: float = 24.0        # Flood duration (h)
