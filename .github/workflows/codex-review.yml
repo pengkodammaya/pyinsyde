@@ -19,6 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     # Fork PRs don't receive repository secrets; skip cleanly instead of failing.
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    # No-op cleanly when no API key is configured (see codex-release.yml).
+    env:
+      HAS_OPENAI_KEY: ${{ secrets.OPENAI_API_KEY != '' }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -26,6 +29,7 @@ jobs:
 
       - name: Run Codex review
         id: codex
+        if: ${{ env.HAS_OPENAI_KEY == 'true' }}
         uses: openai/codex-action@v1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}

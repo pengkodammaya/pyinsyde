@@ -15,6 +15,9 @@ permissions:
 jobs:
   triage:
     runs-on: ubuntu-latest
+    # No-op cleanly when no API key is configured (see codex-release.yml).
+    env:
+      HAS_OPENAI_KEY: ${{ secrets.OPENAI_API_KEY != '' }}
     steps:
       - uses: actions/checkout@v5
 
@@ -43,6 +46,7 @@ jobs:
 
       - name: Run Codex triage
         id: codex
+        if: ${{ env.HAS_OPENAI_KEY == 'true' }}
         uses: openai/codex-action@v1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
