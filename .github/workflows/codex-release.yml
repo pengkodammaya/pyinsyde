@@ -16,6 +16,10 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    # `secrets` can't be used in a step-level `if:`, so surface its presence as a
+    # job-level env boolean and gate the Codex step on that instead.
+    env:
+      HAS_OPENAI_KEY: ${{ secrets.OPENAI_API_KEY != '' }}
     steps:
       - uses: actions/checkout@v5
         with:
@@ -23,7 +27,7 @@ jobs:
 
       - name: Draft release notes with Codex
         id: codex
-        if: ${{ secrets.OPENAI_API_KEY != '' }}
+        if: ${{ env.HAS_OPENAI_KEY == 'true' }}
         continue-on-error: true   # fall back to auto-notes if Codex fails
         uses: openai/codex-action@v1
         with:
