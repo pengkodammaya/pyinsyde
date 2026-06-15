@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 import numpy as np
+import numpy.typing as npt
 
 
 @dataclass
@@ -51,7 +52,9 @@ class HazardVariables:
     model exactly one hazard variable may be passed as a vector.
     """
 
-    he: Optional[np.ndarray] = None  # Water depth at ground level (m); default grid filled in __post_init__
+    # Scalar or 1-D array of depths (or None for the default grid); normalized to
+    # an ndarray in __post_init__.
+    he: Optional[npt.ArrayLike] = None  # Water depth at ground level (m)
     v: float = 0.5         # Flow velocity (m/s)
     s: float = 0.05        # Sediment concentration (-)
     d: float = 24.0        # Flood duration (h)
