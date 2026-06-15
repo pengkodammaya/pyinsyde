@@ -7,7 +7,6 @@ Python port can be checked against it.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
 
 import numpy as np
 
@@ -18,8 +17,10 @@ class ExposureVariables:
 
     # Geometry
     FA: float = 100.0          # Footprint area (m2)
-    IA: Optional[float] = None  # Internal area (m2); default 0.9 * FA
-    BA: Optional[float] = None  # Basement area (m2); default 0.5 * FA
+    # IA/BA default to None and are filled in __post_init__; typed as float since
+    # they are always concrete after construction.
+    IA: float = None  # type: ignore[assignment]  # Internal area (m2); default 0.9 * FA
+    BA: float = None  # type: ignore[assignment]  # Basement area (m2); default 0.5 * FA
     EP: float = 40.0           # External perimeter (m)
     IH: float = 3.5            # Inter-storey height (m)
     BH: float = 3.2            # Basement height (m)
@@ -50,7 +51,7 @@ class HazardVariables:
     model exactly one hazard variable may be passed as a vector.
     """
 
-    he: np.ndarray = None  # Water depth at ground level (m)
+    he: np.ndarray = None  # type: ignore[assignment]  # Water depth at ground level (m); filled in __post_init__
     v: float = 0.5         # Flow velocity (m/s)
     s: float = 0.05        # Sediment concentration (-)
     d: float = 24.0        # Flood duration (h)
